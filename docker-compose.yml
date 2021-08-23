@@ -1,0 +1,39 @@
+version: '3.4'
+
+services:
+  app:
+    build: .
+    ports: 
+      - 8080:8080
+    volumes: 
+      - .:/app/todos
+    environment: 
+      - POSTGRES_USER=root
+      - POSTGRES_PASSWORD=root
+      - POSTGRES_DB=todos
+      - POSTGRES_PORT=5432
+      - POSTGRES_HOST=todo_postgres
+      - PORT=8080
+      - JWT_SECRET_KEY="secret"
+      - JWT_SECRET_KEY_EXPIRE_MINUTES_COUNT=15
+    depends_on: 
+      - pgTodos
+    networks:
+      - todo-network
+    links:
+      - pgTodos
+  pgTodos: 
+    image: postgres
+    container_name: todo_postgres
+    ports: 
+      - 5432:5432
+    environment: 
+      POSTGRES_USER: root
+      POSTGRES_PASSWORD: root
+      POSTGRES_DB: todos
+    networks:
+      - todo-network
+
+networks: 
+  todo-network:
+    driver: bridge
