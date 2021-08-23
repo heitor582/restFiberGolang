@@ -39,7 +39,7 @@ func NewTodo(todoDto dtos.TodoDto) (entities.TodoModel, error) {
 	}
 	err := db.Create(&todo).Error
 	if err != nil {
-		return entities.TodoModel{}, errors.New("Todo not found")
+		return entities.TodoModel{}, errors.New(err.Error())
 	}
 	return todo, nil
 }

@@ -5,6 +5,7 @@ import (
 	"os"
 
 	"github.com/gofiber/fiber/v2"
+	jwtware "github.com/gofiber/jwt/v2"
 	"teste.com/todos/src/configuration"
 	"teste.com/todos/src/routes"
 )
@@ -16,7 +17,10 @@ func init() {
 func main() {
 	var PORT string = ":" + os.Getenv("PORT")
 	app := fiber.New()
-	app.Group("/api/v1")
+	routes.SetupUserRoutes(app)
+	app.Use(jwtware.New(jwtware.Config{
+		SigningKey: []byte(os.Getenv("JWT_SECRET_KEY")),
+	}))
 	routes.SetupTodoRoutes(app)
 	fmt.Println(PORT)
 	app.Listen(PORT)

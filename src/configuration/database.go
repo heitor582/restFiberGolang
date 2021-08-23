@@ -19,6 +19,6 @@ func InitDatabase() {
 		panic("Failed to connect to database")
 	}
 	fmt.Println("Database connection successfully opened")
-	DBConn.AutoMigrate(&entities.TodoModel{})
+	DBConn.AutoMigrate(&entities.TodoModel{}, &entities.UserModel{})
 	fmt.Println("Database Migrate")
 }
