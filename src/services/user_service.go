@@ -25,13 +25,11 @@ func Login(userDto dtos.UserDto) (string, error) {
 	}
 	token := jwt.New(jwt.SigningMethodHS256)
 
-	// Set claims
 	claims := token.Claims.(jwt.MapClaims)
 	claims["name"] = user.Username
 	claims["id"] = user.ID
 	claims["exp"] = time.Now().Add(time.Minute * 15).Unix()
 
-	// Generate encoded token and send it as response.
 	t, err := token.SignedString([]byte(os.Getenv("JWT_SECRET_KEY")))
 	if err != nil {
 		return "", err

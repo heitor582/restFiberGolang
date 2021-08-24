@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"os"
 
 	"github.com/gofiber/fiber/v2"
@@ -22,6 +21,5 @@ func main() {
 		SigningKey: []byte(os.Getenv("JWT_SECRET_KEY")),
 	}))
 	routes.SetupTodoRoutes(app)
-	fmt.Println(PORT)
 	app.Listen(PORT)
 }

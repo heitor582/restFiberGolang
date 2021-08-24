@@ -10,29 +10,29 @@ import (
 	"teste.com/todos/src/entities"
 )
 
-func GetAllTodos() []entities.TodoModel {
+func GetAllTodos(userId uuid.UUID) []entities.TodoModel {
 	db := configuration.DBConn
 	var todos []entities.TodoModel
-	db.Find(&todos)
+	db.Find(&todos, "user_id = ?", userId)
 	return todos
 }
 
-func GetTodo(id uuid.UUID) (entities.TodoModel, error) {
+func GetTodo(id uuid.UUID, userId uuid.UUID) (entities.TodoModel, error) {
 	db := configuration.DBConn
 	var todo entities.TodoModel
-	db.Find(&todo, id)
+	db.Find(&todo, "id = ?", id, "user_id = ?", userId)
 	if todo.ID == uuid.Nil {
 		return todo, errors.New("Todo not found")
 	}
 	return todo, nil
 }
 
-func NewTodo(todoDto dtos.TodoDto) (entities.TodoModel, error) {
+func NewTodo(todoDto dtos.TodoDto, userId uuid.UUID) (entities.TodoModel, error) {
 	db := configuration.DBConn
 	var todo entities.TodoModel = entities.TodoModel{
 		Message:   todoDto.Message,
 		Completed: todoDto.Completed,
-		UserID:    todoDto.UserID,
+		UserID:    userId,
 		ID:        uuid.New(),
 		CreatedAt: time.Now(),
 		UpdatedAt: time.Now(),
