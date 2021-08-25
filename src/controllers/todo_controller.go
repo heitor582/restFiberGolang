@@ -51,6 +51,24 @@ func NewTodo(c *fiber.Ctx) error {
 	return nil
 }
 
+func UpdateTodo(c *fiber.Ctx) error {
+	todoDto := new(dtos.TodoDto)
+	user := c.Locals("user").(*jwt.Token)
+	claims := user.Claims.(jwt.MapClaims)
+	userId := uuid.MustParse(claims["id"].(string))
+	if err := c.BodyParser(todoDto); err != nil {
+		c.JSON(fiber.ErrBadRequest)
+		return errors.New(err.Error())
+	}
+	todo, err := services.UpdateTodo(*todoDto, userId)
+	if err != nil {
+		c.JSON(err)
+		return err
+	}
+	c.JSON(todo)
+	return nil
+}
+
 func DeleteTodo(c *fiber.Ctx) error {
 	id := uuid.MustParse(c.Params("id"))
 	todo, err := services.DeleteTodo(id)

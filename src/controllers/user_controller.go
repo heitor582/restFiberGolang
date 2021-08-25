@@ -32,7 +32,7 @@ func Login(c *fiber.Ctx) error {
 	}
 	token, err := services.Login(*userDto)
 	if err != nil {
-		c.SendStatus(fiber.StatusUnauthorized)
+		c.Status(fiber.ErrBadRequest.Code).JSON(err.Error())
 		return err
 	}
 	c.JSON(fiber.Map{"token": token})

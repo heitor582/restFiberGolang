@@ -44,6 +44,20 @@ func NewTodo(todoDto dtos.TodoDto, userId uuid.UUID) (entities.TodoModel, error)
 	return todo, nil
 }
 
+func UpdateTodo(todoDto dtos.TodoDto, userId uuid.UUID) (entities.TodoModel, error) {
+	db := configuration.DBConn
+	var todo entities.TodoModel = entities.TodoModel{
+		Message:   todoDto.Message,
+		Completed: todoDto.Completed,
+		UpdatedAt: time.Now(),
+	}
+	err := db.Where("user_id = ?", userId).Updates(&todo).Error
+	if err != nil {
+		return entities.TodoModel{}, errors.New(err.Error())
+	}
+	return todo, nil
+}
+
 func DeleteTodo(id uuid.UUID) (entities.TodoModel, error) {
 	db := configuration.DBConn
 	var todo entities.TodoModel
